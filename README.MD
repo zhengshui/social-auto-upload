@@ -37,6 +37,68 @@ playwright install chromium firefox
 ```
 非程序员，[新手级教程](https://juejin.cn/post/7372114027840208911)
 
+# 🐳 Docker 部署
+您可以使用 Docker 来部署该项目，避免环境配置的繁琐。
+
+## 构建 Docker 镜像
+```bash
+docker build -t social-auto-upload .
+```
+
+## 运行 Docker 容器
+```bash
+docker run -d \
+  --name social-auto-upload \
+  -v /path/to/your/videos:/app/videos \
+  -v /path/to/your/config:/app/config \
+  -v /path/to/your/accounts:/app/accounts \
+  social-auto-upload
+```
+
+## 使用 Docker Compose
+创建一个 `docker-compose.yml` 文件:
+
+```yaml
+version: '3'
+services:
+  social-auto-upload:
+    build: .
+    container_name: social-auto-upload
+    volumes:
+      - ./videos:/app/videos
+      - ./config:/app/config
+      - ./accounts:/app/accounts
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+```
+
+启动服务:
+```bash
+docker-compose up -d
+```
+
+## Docker 常见问题处理
+
+### 浏览器依赖安装失败
+如果在构建过程中遇到浏览器依赖安装失败的问题，可尝试以下解决方案：
+
+1. 确保网络连接稳定，可以尝试使用国内镜像：
+```bash
+docker build --build-arg PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple -t social-auto-upload .
+```
+
+2. 对于ARM架构设备(如M1/M2 Mac)，可能需要使用特定的构建参数：
+```bash
+docker build --platform linux/amd64 -t social-auto-upload .
+```
+
+### 远程容器无法打开浏览器
+Docker容器默认情况下不支持GUI。对于需要浏览器界面的操作(如登录)，可以：
+
+1. 在本地完成登录并获取cookies，然后将cookies配置文件挂载到容器中
+2. 使用VNC或远程桌面方案
+
 # 🐇 About
 The project for my own project extracted, my release strategy is timed release (released a day in advance), so the release part of the event are used for the next day time!
 

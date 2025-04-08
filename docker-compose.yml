@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  social-auto-upload:
+    build: .
+    container_name: social-auto-upload
+    volumes:
+      - ./videos:/app/videos
+      - ./config:/app/config
+      - ./accounts:/app/accounts
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    # If you need to run a specific command, uncomment and modify the line below
+    # command: python cli_main.py douyin test login
